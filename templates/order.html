@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block title %}order{% endblock %}
+
+{% block content %}
+
+  <h1>Available Items:</h1>
+  <br>
+  <form action="/ordered" method="POST">
+		<p>Food:</p>
+		<input type="checkbox" id="food1" name="food" value="burgers">
+		<label for="food1"> Burgers</label><br>
+		<input type="checkbox" id="food2" name="food" value="hotdogs">
+		<label for="food2"> Hotdogs</label><br>
+		<input type="checkbox" id="food3" name="food" value="ribs">
+		<label for="food3"> Ribs</label><br>
+		<input type="checkbox" id="food4" name="food" value="steak">
+		<label for="food4"> Steak</label><br>
+		<input type="checkbox" id="food5" name="food" value="friedChickenBucket">
+		<label for="food5"> Fried Chicken Bucket</label><br>
+		<input type="checkbox" id="food1" name="food" value="burritos">
+		<label for="food1"> Burritos</label><br>
+		<input type="checkbox" id="food2" name="food" value="tacos">
+		<label for="food2"> Tacos</label><br>
+		<input type="checkbox" id="food3" name="food" value="carnitas">
+		<label for="food3"> Carnitas</label><br>
+		<input type="checkbox" id="food4" name="food" value="chipsSalsa">
+		<label for="food4"> Chips & Salsa</label><br>
+		<input type="checkbox" id="food5" name="food" value="nachos">
+		<label for="food5"> Nachos</label><br>
+		<br>
+		<p>drinknks:</p>
+		<input type="checkbox" id="drink1" name="drink" value="cocaCola">
+		<label for="drink1"> Coca Cola</label><br>
+		<input type="checkbox" id="drink2" name="drink" value="sprite">
+		<label for="drink2"> Sprite</label><br>
+		<input type="checkbox" id="drink3" name="drink" value="root beer">
+		<label for="drink3"> Root Beer</label><br>
+		<input type="checkbox" id="drink4" name="drink" value="water">
+		<label for="drink4"> Water</label><br>
+		<input type="checkbox" id="drink5" name="drink" value="milkshake">
+		<label for="drink5"> Fanta</label><br>
+		<br>
+		<p>dessertserts:</p>
+		<input type="checkbox" id="dessert1" name="dessert" value="iceCream">
+		<label for="dessert1"> Ice Cream</label><br>
+		<input type="checkbox" id="dessert2" name="dessert" value="milkshake">
+		<label for="dessert2"> Milkshake</label><br>
+		<input type="checkbox" id="dessert3" name="dessert" value="cake">
+		<label for="dessert3"> Cake</label><br>
+		<input type="checkbox" id="dessert4" name="dessert" value="applePie">
+		<label for="dessert4"> Apple pie</label><br>
+		<input type="checkbox" id="dessert5" name="dessert" value="cheesecake">
+		<label for="dessert5"> Cheesecake</label><br>
+		<br><input type="submit" value="Submit">
+  </form>
+  
+{% endblock %}
