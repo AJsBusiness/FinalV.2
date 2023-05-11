@@ -100,27 +100,36 @@ def render_order():
     
 @app.route('/ordered', methods=['get','post'])
 def render_ordered():
+    food = "none"
+    drink = "none"
+    dessert = "none"
     if 'food' in request.form:
-        session['food']=request.form['food']
+        food=request.form['food']
     if 'drink' in request.form:
-        session['drink']=request.form['drink']
+        drink=request.form['drink']
     if 'dessert' in request.form:
-        session['dessert']=request.form['dessert']
-        #fix this tomorrow
-    doc = {"Food Iteam/s":session["food"], "Drink/s":session["drink"], "Dessert/s":session["dessert"]}
+        dessert=request.form['dessert']
+    doc = {"Food Iteam/s":food, "Drink/s":drink, "Dessert/s":dessert}
     collection.insert_one(doc)
     return render_template('ordered.html')
     
 @app.route('/cart')
 def render_cart():
-    order=getOrder
+    order=getOrder()
     return render_template('cart.html', order=order)
     
 def getOrder():
     docs=""
     for doc in collection.find():
-        docs += Markup("<div>" + "Food item/s: " + str(doc["food"]) + "<br>" + "Drink/s: " + str(doc["drink"]) + "<br>" + "Dessert/s: " + str(doc["dessert"]) + "<form action=\"/delete\" method=\"post\"> <button type=\"submit\" name=\"delete\" value=\""+str(doc["_id"])+"\">Delete</button> </form>" + "</div>")
+        docs += Markup("<div>" + "Food Iteam/s: " + doc["Food Iteam/s"] + "<br>" + "Drink/s: " + doc["Drink/s"] + "<br>" + "Dessert/s: " + doc["Dessert/s"] + "<form action=\"/delete\" method=\"post\"> <button type=\"submit\" name=\"delete\" value=\""+ str(doc["_id"]) + "\">Delete</button> </form>" + "</div>")
     return docs
+    
+@app.route("/delete", methods=['post'])
+def renderDelete():
+    if 'delete' in request.form:
+        ID = request.form['delete']
+        collection.delete_one({'_id': ObjectId(ID)})
+    return redirect(url_for("render_cart"))
 
 if __name__ == '__main__':
     app.run(debug=True)
