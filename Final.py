@@ -101,14 +101,14 @@ def render_order():
 @app.route('/ordered', methods=['get','post'])
 def render_ordered():
     food = "none"
-    drink = "none"
+    drink = []
     dessert = "none"
     if 'food' in request.form:
-        food=request.form['food']
+        food=request.form.getlist('food')
     if 'drink' in request.form:
-        drink=request.form['drink']
+        drink=request.form.getlist('drink')
     if 'dessert' in request.form:
-        dessert=request.form['dessert']
+        dessert=request.form.getlist('dessert')
     doc = {"Food Iteam/s":food, "Drink/s":drink, "Dessert/s":dessert}
     collection.insert_one(doc)
     return render_template('ordered.html')
@@ -121,7 +121,7 @@ def render_cart():
 def getOrder():
     docs=""
     for doc in collection.find():
-        docs += Markup("<div>" + "Food Iteam/s: " + doc["Food Iteam/s"] + "<br>" + "Drink/s: " + doc["Drink/s"] + "<br>" + "Dessert/s: " + doc["Dessert/s"] + "<form action=\"/delete\" method=\"post\"> <button type=\"submit\" name=\"delete\" value=\""+ str(doc["_id"]) + "\">Delete</button> </form>" + "</div>")
+        docs += Markup("<div>" + "Food Iteam/s: " + str(doc["Food Iteam/s"]) + "<br>" + "Drink/s: " + str(doc["Drink/s"]) + "<br>" + "Dessert/s: " + str(doc["Dessert/s"]) + "<form action=\"/delete\" method=\"post\"> <button type=\"submit\" name=\"delete\" value=\""+ str(doc["_id"]) + "\">Delete</button> </form>" + "</div>")
     return docs
     
 @app.route("/delete", methods=['post'])
