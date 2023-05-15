@@ -1,8 +1,19 @@
 body {
-background-color: #faa755;
+background-color: #eb8334;
+}
+
+form p {
+	font-size: 27px;
+}
+
+form label {
+	font-size: 17px;
 }
 
 #content {
      margin-left: 20px;
 }
 
+#cartOrder {
+	font-size: 20px;
+}

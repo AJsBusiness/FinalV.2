@@ -121,7 +121,7 @@ def render_cart():
 def getOrder():
     docs=""
     for doc in collection.find():
-        docs += Markup("<div>" + "Food Iteam/s: " + str(doc["Food Iteam/s"]) + "<br>" + "Drink/s: " + str(doc["Drink/s"]) + "<br>" + "Dessert/s: " + str(doc["Dessert/s"]) + "<form action=\"/delete\" method=\"post\"> <button type=\"submit\" name=\"delete\" value=\""+ str(doc["_id"]) + "\">Delete</button> </form>" + "</div>")
+        docs += Markup('<div id="cartOrder">' + "Food Iteam/s: " + str(doc["Food Iteam/s"]) + "<br>" + "Drink/s: " + str(doc["Drink/s"]) + "<br>" + "Dessert/s: " + str(doc["Dessert/s"]) + "<form action=\"/delete\" method=\"post\"> <button type=\"submit\" name=\"delete\" value=\""+ str(doc["_id"]) + "\">Delete</button> </form>" + "</div>")
     return docs
     
 @app.route("/delete", methods=['post'])
