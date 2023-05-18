@@ -18,10 +18,13 @@ oauth = OAuth(app)
 oauth.init_app(app) #initialize the app to be able to make requests for user information
 
 connection_string = os.environ["MONGO_CONNECTION_STRING"]
-db_name = os.environ["MONGO_DBNAME"]
+db_name1 = os.environ["MONGO_DBNAME1"]
+db_name2 = os.environ["MONGO_DBNAME2"]
 client = pymongo.MongoClient(connection_string)
-db = client[db_name]
-collection = db['Items']
+db1 = client[db_name1]
+db2 = client[db_name2]
+collection1 = db1['Items']
+collection2 = db2['Prices']
 
 
     
@@ -94,23 +97,31 @@ def get_github_oauth_token():
 @app.route('/order')
 def render_order():
     if 'github_token' in session:
-        return render_template('order.html')
+        menu = getMenu("Food")
+        menu2 = getMenu("Drink")
+        menu3 = getMenu("Dessert")
+        return render_template('order.html', menu=menu, menu2=menu2, menu3=menu3)
     else:
         return render_template('pleaseLog.html')
+        
+        
+def getMenu(menu):
+    m=""
+    for doc in collection2.find( {menu:{"$gt":""}}):
+        m += Markup('<div id="orderPrices">' + str(doc[menu]) + "<br>" + str(doc["Price"]) + "<form action=\"/ordered\" method=\"POST\"> <input type=\"checkbox\"> <value=\""+ str(doc["_id"]) + "\"</form>" + "</div>")
+    return m
+
     
-@app.route('/ordered', methods=['get','post'])
+    
+@app.route('/ordered', methods=['GET','POST'])
 def render_ordered():
     food = "none"
-    drink = []
+    drink = "none"
     dessert = "none"
-    if 'food' in request.form:
-        food=request.form.getlist('food')
-    if 'drink' in request.form:
-        drink=request.form.getlist('drink')
-    if 'dessert' in request.form:
-        dessert=request.form.getlist('dessert')
-    doc = {"Food Iteam/s":food, "Drink/s":drink, "Dessert/s":dessert}
-    collection.insert_one(doc)
+    if menu in request.form:
+        menu=request.form.getlist(menu)
+    doc = {"Food/s":Food, "Drink/s":Drink, "Dessert/s":Dessert}
+    collection1.insert_one(doc)
     return render_template('ordered.html')
     
 @app.route('/cart')
@@ -120,15 +131,15 @@ def render_cart():
     
 def getOrder():
     docs=""
-    for doc in collection.find():
-        docs += Markup('<div id="cartOrder">' + "Food Iteam/s: " + str(doc["Food Iteam/s"]) + "<br>" + "Drink/s: " + str(doc["Drink/s"]) + "<br>" + "Dessert/s: " + str(doc["Dessert/s"]) + "<form action=\"/delete\" method=\"post\"> <button type=\"submit\" name=\"delete\" value=\""+ str(doc["_id"]) + "\">Delete</button> </form>" + "</div>")
+    for doc in collection1.find():
+        docs += Markup('<div id="cartOrder">' + "Food/s: " + str(doc["Food/s"]) + "<br>" + "Drink/s: " + str(doc["Drink/s"]) + "<br>" + "Dessert/s: " + str(doc["Dessert/s"]) + "<form action=\"/delete\" method=\"post\"> <button type=\"submit\" name=\"delete\" value=\""+ str(doc["_id"]) + "\">Delete</button> </form>" + "</div>")
     return docs
     
-@app.route("/delete", methods=['post'])
+@app.route("/delete", methods=['POST'])
 def renderDelete():
     if 'delete' in request.form:
         ID = request.form['delete']
-        collection.delete_one({'_id': ObjectId(ID)})
+        collection1.delete_one({'_id': ObjectId(ID)})
     return redirect(url_for("render_cart"))
 
 if __name__ == '__main__':
