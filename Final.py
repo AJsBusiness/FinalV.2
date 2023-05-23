@@ -49,10 +49,6 @@ github = oauth.remote_app(
 def inject_logged_in():
     return {"logged_in":('github_token' in session)}
 
-@app.route('/')
-def home():
-    return render_template('home.html')
-    
 
 #redirect to GitHub's OAuth page and confirm callback URL
 @app.route('/login')
@@ -94,6 +90,12 @@ def render_google_verification():
 def get_github_oauth_token():
     return session['github_token']
     
+    
+@app.route('/')
+def home():
+    print(session)
+    return render_template('home.html')
+    
 @app.route('/order')
 def render_order():
     if 'github_token' in session:
@@ -108,7 +110,7 @@ def render_order():
 def getMenu(menu):
     m=""
     for doc in collection2.find( {menu:{"$gt":""}}):
-        m += Markup('<div id="orderPrices">' + str(doc[menu]) + "<br>" + str(doc["Price"]) + "<form action=\"/ordered\" method=\"POST\"> <input type=\"checkbox\"> <value=\""+ str(doc["_id"]) + "\"</form>" + "</div>")
+        m += Markup('<div>' + str(doc[menu]) + "<br>" + str(doc["Price"]) + "<form action=\"/ordered\" method=\"POST\"> <input type=\"checkbox\" value=\"" + str(doc["_id"]) + '" name="' + menu + '"></div>')
     return m
 
     
@@ -118,10 +120,18 @@ def render_ordered():
     food = "none"
     drink = "none"
     dessert = "none"
-    if menu in request.form:
-        menu=request.form.getlist(menu)
-    doc = {"Food/s":Food, "Drink/s":Drink, "Dessert/s":Dessert}
-    collection1.insert_one(doc)
+    order = collection1.find_one()
+    if order == None:
+        if 'Food' in request.form:
+            food=request.form.getlist('Food')
+        if 'Drink' in request.form:
+            drink=request.form.getlist('Drink')
+        if 'Dessert' in request.form:
+            dessert=request.form.getlist('Dessert')
+        doc = {"Food/s":food, "Drink/s":drink, "Dessert/s":dessert}
+        collection1.insert_one(doc)
+    else:
+        collection1.update_one(doc)
     return render_template('ordered.html')
     
 @app.route('/cart')
@@ -130,10 +140,11 @@ def render_cart():
     return render_template('cart.html', order=order)
     
 def getOrder():
-    docs=""
-    for doc in collection1.find():
-        docs += Markup('<div id="cartOrder">' + "Food/s: " + str(doc["Food/s"]) + "<br>" + "Drink/s: " + str(doc["Drink/s"]) + "<br>" + "Dessert/s: " + str(doc["Dessert/s"]) + "<form action=\"/delete\" method=\"post\"> <button type=\"submit\" name=\"delete\" value=\""+ str(doc["_id"]) + "\">Delete</button> </form>" + "</div>")
-    return docs
+    items=""
+    for item in collection1.find_one()["Food/s"]:
+        g = collection2.find_one({"_id": ObjectId(item)})
+        items += Markup('<div>' + "Food/s: " + g['Food'] + "<form action=\"/delete\" method=\"post\"> <button type=\"submit\" name=\"delete\" value=\""+ str(g["Food"]) + "\">Delete</button> </form>" + "</div>")
+    return items
     
 @app.route("/delete", methods=['POST'])
 def renderDelete():
