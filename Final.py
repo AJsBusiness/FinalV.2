@@ -120,7 +120,8 @@ def render_ordered():
     food = "none"
     drink = "none"
     dessert = "none"
-    order = collection1.find_one()
+    filters = {"ID": session['user_data']['id']}
+    order = collection1.find_one(filters)
     if order == None:
         if 'Food' in request.form:
             food=request.form.getlist('Food')
@@ -128,10 +129,11 @@ def render_ordered():
             drink=request.form.getlist('Drink')
         if 'Dessert' in request.form:
             dessert=request.form.getlist('Dessert')
-        doc = {"Food/s":food, "Drink/s":drink, "Dessert/s":dessert}
+        doc = {"Food/s":food, "Drink/s":drink, "Dessert/s":dessert, "ID": session['user_data']['id']}
         collection1.insert_one(doc)
     else:
-        collection1.update_one(doc)
+        newvalues = { '$push': {'Food/s': food}, '$push': {'Drink/s': drink}, '$push': {'Dessert/s': dessert}}
+        collection1.update_one(filters, newvalues)
     return render_template('ordered.html')
     
 @app.route('/cart')
@@ -141,9 +143,13 @@ def render_cart():
     
 def getOrder():
     items=""
-    for item in collection1.find_one()["Food/s"]:
-        g = collection2.find_one({"_id": ObjectId(item)})
-        items += Markup('<div>' + "Food/s: " + g['Food'] + "<form action=\"/delete\" method=\"post\"> <button type=\"submit\" name=\"delete\" value=\""+ str(g["Food"]) + "\">Delete</button> </form>" + "</div>")
+    for food in collection1.find_one()["Food/s"]:
+        f = collection2.find_one({"_id": ObjectId(food)})
+    for drink in collection1.find_one()["Drink/s"]:
+        d = collection2.find_one({"_id": ObjectId(drink)})
+    for dessert in collection1.find_one()["Dessert/s"]:
+        ds = collection2.find_one({"_id": ObjectId(dessert)})
+    items += Markup('<div>' + "Food/s: " + f['Food'] + "<br>" + "Drink/s: " + d['Drink'] + "<br>" + "Dessert/s: " + ds['Dessert'] +"<form action=\"/delete\" method=\"post\"> <button type=\"submit\" name=\"delete\" value=\"" + str(f["Food"]) + str(d["Drink"]) + str(ds["Dessert"]) + "\">Delete</button> </form>" + "</div>")
     return items
     
 @app.route("/delete", methods=['POST'])
