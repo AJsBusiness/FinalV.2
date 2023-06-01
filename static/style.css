@@ -1,5 +1,54 @@
-body {
-background-color: #eb8334;
+.hmepge {
+	min-height: 100vh;
+	background: linear-gradient(to bottom, orange 0%, orange 30%, white 33%, white 100%);
+	background-size: 100%;
+	background-repeat: no-repeat;
+}
+
+.ordr {
+	min-height: 100vh;
+	background: linear-gradient(to right, orange 0%, orange 20%, white 25%, white 100%);
+	background-size: 100%;
+	background-repeat: no-repeat;
+}
+
+#left {
+	display: block;
+	margin-right: auto;
+	width: 60%;
+}
+
+#right {
+	display: block;
+	margin-left: auto;
+	width: 60%;
+}
+
+.container {
+  position: relative;
+  font-family: Arial;
+}
+
+.left-text-block {
+	position: absolute;
+	bottom: 20px;
+	left: 20px;
+	background-color: black;
+	opacity: 0.7;
+	color: white;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.right-text-block {
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+	background-color: black;
+	opacity: 0.7;
+	color: white;
+	padding-left: 20px;
+	padding-right: 20px;
 }
 
 form p {

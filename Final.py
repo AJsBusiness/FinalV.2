@@ -2,7 +2,7 @@ import pymongo
 import os
 import sys
 import pprint
-from flask import Flask, redirect, Markup, url_for, session, request, jsonify
+from flask import Flask, redirect, Markup, url_for, session, request, jsonify, flash
 from flask_oauthlib.client import OAuth
 from flask import render_template
 from bson.objectid import ObjectId
@@ -66,19 +66,19 @@ def authorized():
     resp = github.authorized_response()
     if resp is None:
         session.clear()
-        message = 'Access denied: reason=' + request.args['error'] + ' error=' + request.args['error_description'] + ' full=' + pprint.pformat(request.args)      
+        flash('Access denied: reason=' + request.args['error'] + ' error=' + request.args['error_description'] + ' full=' + pprint.pformat(request.args))      
     else:
         try:
             session['github_token'] = (resp['access_token'], '') #save the token to prove that the user logged in
             session['user_data']=github.get('user').data
             #pprint.pprint(vars(github['/email']))
             #pprint.pprint(vars(github['api/2/accounts/profile/']))
-            message='You were successfully logged in as ' + session['user_data']['login'] + '.'
+            flash('You were successfully logged in as ' + session['user_data']['login'] + '.')
         except Exception as inst:
             session.clear()
             print(inst)
-            message='Unable to login, please try again.  '
-    return render_template('homeMessage.html', message=message)
+            flash('Unable to login, please try again.')
+    return redirect('/')
     #Change the render
     
 @app.route('/googleb4c3aeedcc2dd103.html')
@@ -94,7 +94,7 @@ def get_github_oauth_token():
 @app.route('/')
 def home():
     print(session)
-    return render_template('home.html')
+    return render_template('home.html', bckgrnd = "hmepge")
     
 @app.route('/order')
 def render_order():
@@ -102,9 +102,9 @@ def render_order():
         menu = getMenu("Food")
         menu2 = getMenu("Drink")
         menu3 = getMenu("Dessert")
-        return render_template('order.html', menu=menu, menu2=menu2, menu3=menu3)
+        return render_template('order.html', bckgrnd = "ordr", menu=menu, menu2=menu2, menu3=menu3)
     else:
-        return render_template('pleaseLog.html')
+        return render_template('pleaseLog.html', bckgrnd = "ordr")
         
         
 def getMenu(menu):
