@@ -1,15 +1,34 @@
 .hmepge {
 	min-height: 100vh;
-	background: linear-gradient(to bottom, orange 0%, orange 30%, white 33%, white 100%);
+	background: linear-gradient(to bottom, orange 0%, orange 3%, white 1%, white 9%, orange 9%, orange 37%, white 39%, white 100%);
 	background-size: 100%;
 	background-repeat: no-repeat;
 }
 
 .ordr {
 	min-height: 100vh;
-	background: linear-gradient(to right, orange 0%, orange 20%, white 25%, white 100%);
+	background: linear-gradient(to right, orange 0%, orange 35%, white 40%, white 100%);
 	background-size: 100%;
 	background-repeat: no-repeat;
+}
+
+#ordrtxt {
+	font-size: 20px;
+}
+
+.loggedout {
+	min-height: 100vh;
+	background: linear-gradient(to bottom right, orange 0%, orange 18%, white 20%, white 100%);
+	background-size: 100%;
+	background-repeat: no-repeat;
+}
+
+#logo {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 50%;
+	border-radius: 50px;
 }
 
 #left {

@@ -5,16 +5,16 @@
 {% block content %}
   <br>
   <form action="/ordered" method="POST">
-		<p>Food:</p>
-		{{ menu }}
+		<h2><b>Food:</b></h2>
+		<h4>{{ menu }}</h4>
 		<br>
-		<p>Drinks:</p>
-		{{ menu2 }}
+		<h2><b>Drinks:</b></h2>
+		<h4>{{ menu2 }}</h4>
 		<br>
-		<p>Desserts:</p>
-		{{ menu3 }}
+		<h2><b>Desserts:</b></h2>
+		<h4>{{ menu3 }}</h4>
 		<br><input type="submit" value="Submit">
   </form>
-  
+  <br>
   
 {% endblock %}
