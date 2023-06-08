@@ -5,15 +5,19 @@
 {% block content %}
   <br>
   <form action="/ordered" method="POST">
-		<h2><b>Food:</b></h2>
-		<h4>{{ menu }}</h4>
-		<br>
-		<h2><b>Drinks:</b></h2>
-		<h4>{{ menu2 }}</h4>
-		<br>
-		<h2><b>Desserts:</b></h2>
-		<h4>{{ menu3 }}</h4>
-		<br><input type="submit" value="Submit">
+		<table style="width:100%">
+			<tr>
+				<td><h2><b>Food:</b></h2></td>
+				<td><h2><b>Drinks:</b></h2></td>
+				<td><h2><b>Desserts:</b></h2></td>
+			</tr>
+			<tr>
+				<td><h4>{{ menu }}</h4></td>
+				<td><h4>{{ menu2 }}</h4></td>
+				<td><h4>{{ menu3 }}</h4></td>
+			</tr>
+		<table style="width:100%">
+			<br><input type="submit" value="Submit">
   </form>
   <br>
   
