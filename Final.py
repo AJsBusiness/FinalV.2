@@ -109,7 +109,7 @@ def render_order():
 def getMenu(menu):
     m=""
     for doc in collection2.find( {menu:{"$gt":""}}):
-        m += Markup('<div>' + str(doc[menu]) + "<br>" + str(doc["Price"]) + "<form action=\"/ordered\" method=\"POST\"> <input type=\"checkbox\" value=\"" + str(doc["_id"]) + '" name="' + menu + '"></div>')
+        m += Markup('<div>' + str(doc[menu]) + "<br>" + str(doc["Price"]) + "<form action=\"/ordered\" method=\"POST\"> <input class=\"chckbx\" type=\"checkbox\" value=\"" + str(doc["_id"]) + '" name="' + menu + '"></div>')
     return m
 
     
@@ -145,7 +145,8 @@ def render_ordered():
 def render_cart():
     if 'github_token' in session:
         order=getOrder()
-        return render_template('cart.html', order=order, bckgrnd = "ordr")
+        total = getTotal()
+        return render_template('cart.html', order=order, total=total, bckgrnd = "ordr")
     else:
         return render_template('pleaseLog.html')
     
@@ -156,18 +157,33 @@ def getOrder():
     if 'Food/s' in menu:
         for food in menu["Food/s"]:
             f = collection2.find_one({"_id": ObjectId(food)})
-            items += Markup('<div>' + "Food/s: " + f['Food'] + "<form action=\"/delete\" method=\"post\"> <button type=\"submit\" name=\"Food/s\" value=\"" + str(f["Food"]) + "\">Delete</button> </form>" + "</div>")
+            items += Markup('<div>' + "Food/s: " + f['Food'] + "<br>" + "<form action=\"/delete\" method=\"post\"> <button type=\"submit\" name=\"Food/s\" value=\"" + str(f["Food"]) + "\">Delete</button> </form>" + "</div>")
     if 'Drink/s' in menu:            
         for drink in menu["Drink/s"]:
             d = collection2.find_one({"_id": ObjectId(drink)})
-            items += Markup('<div>' + "Drink/s: " + d['Drink'] + "<form action=\"/delete\" method=\"post\"> <button type=\"submit\" name=\"Drink/s\" value=\"" + str(d["Drink"]) + "\">Delete</button> </form>" + "</div>")
+            items += Markup('<div>' + "Drink/s: " + d['Drink'] + "<br>" + "<form action=\"/delete\" method=\"post\"> <button type=\"submit\" name=\"Drink/s\" value=\"" + str(d["Drink"]) + "\">Delete</button> </form>" + "</div>")
     if 'Dessert/s' in menu:
         for dessert in menu["Dessert/s"]:
             ds = collection2.find_one({"_id": ObjectId(dessert)})
             items += Markup('<div>' + "Dessert/s: " + ds['Dessert'] +"<form action=\"/delete\" method=\"post\"> <button type=\"submit\" name=\"Dessert/s\" value=\"" + str(ds["Dessert"]) + "\">Delete</button> </form>" + "</div>")
     if items == "":
-        items="You must first add things to your cart inorder to veiw it."
+        items="You must first add things to your cart in  order to view it."
     return items
+    
+def getTotal():
+    total=0
+    filters = {"ID": session['user_data']['id']}
+    menu = collection1.find_one(filters)
+    for food in menu["Food/s"]:
+        pf = collection2.find_one({"_id": ObjectId(food)})
+        total += pf["Price"]
+    for drink in menu["Drink/s"]:
+        pd = collection2.find_one({"_id": ObjectId(drink)})
+        total += pd["Price"]
+    for dessert in menu["Dessert/s"]:
+        pde = collection2.find_one({"_id": ObjectId(dessert)})
+        total += pde["Price"]
+    return total
     
 @app.route("/delete", methods=['POST'])
 def renderDelete():
